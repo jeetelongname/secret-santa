@@ -1,8 +1,26 @@
 #!/usr/bin/env python3
 import argparse
 import sys
-import csv
+import csv  # pretty much only used to check the file
 import random
+
+
+def email(people, matches, email, smtp):
+    if email is None:
+        email = input("enter email: ")
+    if smtp is None:
+        smtp = input("enter smtp address: ")
+
+    import smtplib
+
+    server = smtplib.SMTP_SSL(smtp, 465)
+    server.login(email, input("input password"))
+    server.sendmail(
+        "jeetelongname@gmail.com",
+        "jeetelongname@gmail.com",
+        "this message is from python")
+    server.quit()
+    print("well hello themre")
 
 
 def check_csv(fileh):
@@ -17,6 +35,8 @@ def check_csv(fileh):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input")
+    parser.add_argument("-m", "--email")
+    parser.add_argument("-s", "--smtp")
     # parser.add_argument("", kwargs)
     args = parser.parse_args()
     try:
@@ -26,27 +46,23 @@ def main():
             people = {}
             i = 0
             for row in lines:
-                people[i] = row.split(",")
+                people[i-1] = row.split(",")
                 i += 1
 
-            del people[0]  # delete the lable row
-
+            del people[-1]  # delete the lable row
+            # start of the matching
             people_copy = people
             matches = {}
             i = 0
-            while people_copy is not False:
+            x = 0
+            while bool(people_copy) is not False:
                 x = random.choice(list(people_copy.keys()))
-                print(x, i)
-                # print(len(list(people_copy.keys())))
-                if i == x:
+                if x == i:
                     continue
-                    print("con")
-                else:
-                    matches[i] = x
-                    del people_copy[x]
-                    print(i)
+                matches[i] = x
+                del people_copy[x]
                 i += 1
-            print(matches)
+            email(people, matches, args.email, args.smtp)
             sys.exit()
     except IOError:
         print("not valid file path")
