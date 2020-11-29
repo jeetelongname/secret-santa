@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import argparse
-import sys
+import argparse  # do I need to say more?
 import csv  # pretty much only used to check the file
-import random
+import random  # for the matching
+import smtplib  # emails and what not
+import sys  # dem error codes
 
 
 def email(people, matches, email, smtp):
@@ -11,10 +12,17 @@ def email(people, matches, email, smtp):
     if smtp is None:
         smtp = input("enter smtp address: ")
 
-    import smtplib
-
     server = smtplib.SMTP_SSL(smtp, 465)
-    server.login(email, input("input password"))
+    try:
+        server.login(email, input("input password: "))
+    except KeyboardInterrupt:
+        print("\nyou little bastard... you have killed me")
+        sys.exit(69)  # this is a srmount error (do I care? no)
+    except smtplib.SMTPAuthenticationError:
+        print("you failed")
+        sys.exit(11)
+
+        # TODO You need to send all the emails
     server.sendmail(
         "jeetelongname@gmail.com",
         "jeetelongname@gmail.com",
