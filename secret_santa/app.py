@@ -6,27 +6,39 @@ import smtplib  # emails and what not
 import sys  # dem error codes
 
 
+def email_maker(sender, recever):
+    pass
+
+
 def email(people, matches, email, smtp):
+    email_location = 10
     if email is None:
         email = input("enter email: ")
     if smtp is None:
         smtp = input("enter smtp address: ")
-
     server = smtplib.SMTP_SSL(smtp, 465)
-    try:
-        server.login(email, input("input password: "))
-    except KeyboardInterrupt:
-        print("\nyou little bastard... you have killed me")
-        sys.exit(69)  # this is a srmount error (do I care? no)
-    except smtplib.SMTPAuthenticationError:
-        print("you failed")
-        sys.exit(11)
+    while True:
+        try:
+            server.login(email, input("input password: "))
+            break
+        except KeyboardInterrupt:
+            print("\nyou little bastard... you have killed me")
+            sys.exit(69)  # this is a srmount error (do I care? no)
+        except smtplib.SMTPAuthenticationError:
+            print("\nyou failed")
+            continue
 
         # TODO You need to send all the emails
-    server.sendmail(
-        "jeetelongname@gmail.com",
-        "jeetelongname@gmail.com",
-        "this message is from python")
+        # match 0 : 9
+    # server.sendmail("Sender email", "recever email", "message")
+    # server.sendmail(
+    #     "jeetelongname@gmail.com",
+    #     "jeetelongname@gmail.com",
+    #     "this message is from python")
+    for i in matches:
+        sender = people.get(i)[email_location]
+        recever = people.get(matches[i])[email_location]
+        server.sendmail(sender, recever, email_maker(sender, recever))
     server.quit()
     print("well hello themre")
 
@@ -57,9 +69,12 @@ def main():
                 people[i-1] = row.split(",")
                 i += 1
 
-            del people[-1]  # delete the lable row
+            del people[-1]  # delete the label row
+            # removing the trailing newlines that are made when spliting
+            for i in people:
+                people.get(i)[-1] = people.get(i)[-1].replace("\n", "")
             # start of the matching
-            people_copy = people
+            people_copy = people.copy()
             matches = {}
             i = 0
             x = 0
