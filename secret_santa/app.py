@@ -18,11 +18,26 @@ def check_csv(fileh):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--input")
-    parser.add_argument("-m", "--email")
-    parser.add_argument("-s", "--smtp")
-    # parser.add_argument("", kwargs)
+    parser = argparse.ArgumentParser(
+        description="""
+        A secret santa helper that takes in all of the details required and
+        sends them a nice email
+        """,
+        epilog="""
+        It is reccomeded to use a burner email
+        I use https://cock.li but use whatever
+        """)
+    parser.add_argument(
+        "-i", "--input",
+        help="input file full of your info has to be a csv",
+        required=True
+    )
+    parser.add_argument(
+        "-m", "--email",
+        help="the email address that will send all of the emails,")
+    parser.add_argument(
+        "-s", "--smtp",
+        help="the smtp address of your email service")
     args = parser.parse_args()
     try:
         with open(args.input, 'r') as csvfile:
