@@ -2,45 +2,10 @@
 import argparse  # do I need to say more?
 import csv  # pretty much only used to check the file
 import random  # for the matching
-import smtplib  # emails and what not
 import sys  # dem error codes
 
-
-def email_maker(sender, recever):
-    pass
-
-
-def email(people, matches, email, smtp):
-    email_location = 10
-    if email is None:
-        email = input("enter email: ")
-    if smtp is None:
-        smtp = input("enter smtp address: ")
-    server = smtplib.SMTP_SSL(smtp, 465)
-    while True:
-        try:
-            server.login(email, input("input password: "))
-            break
-        except KeyboardInterrupt:
-            print("\nyou little bastard... you have killed me")
-            sys.exit(69)  # this is a srmount error (do I care? no)
-        except smtplib.SMTPAuthenticationError:
-            print("\nyou failed")
-            continue
-
-        # TODO You need to send all the emails
-        # match 0 : 9
-    # server.sendmail("Sender email", "recever email", "message")
-    # server.sendmail(
-    #     "jeetelongname@gmail.com",
-    #     "jeetelongname@gmail.com",
-    #     "this message is from python")
-    for i in matches:
-        sender = people.get(i)[email_location]
-        recever = people.get(matches[i])[email_location]
-        server.sendmail(sender, recever, email_maker(sender, recever))
-    server.quit()
-    print("well hello themre")
+# My modules
+from mail import bootstrap  # my email function
 
 
 def check_csv(fileh):
@@ -68,25 +33,27 @@ def main():
             for row in lines:
                 people[i-1] = row.split(",")
                 i += 1
-
-            del people[-1]  # delete the label row
-            # removing the trailing newlines that are made when spliting
-            for i in people:
-                people.get(i)[-1] = people.get(i)[-1].replace("\n", "")
-            # start of the matching
-            people_copy = people.copy()
-            matches = {}
-            i = 0
-            x = 0
-            while bool(people_copy) is not False:
-                x = random.choice(list(people_copy.keys()))
-                if x == i:
-                    continue
-                matches[i] = x
-                del people_copy[x]
-                i += 1
-            email(people, matches, args.email, args.smtp)
-            sys.exit()
+            csvfile.close()  # close my file like a good boy
     except IOError:
         print("not valid file path")
         sys.exit(2)
+
+    del people[-1]  # delete the label row
+    # it works because its a dictionary =
+    # removing the trailing newlines that are made when spliting
+    for i in people:
+        people.get(i)[-1] = people.get(i)[-1].replace("\n", "")
+    # start of the matching
+    people_copy = people.copy()
+    matches = {}
+    i = 0
+    x = 0
+    while bool(people_copy) is not False:
+        x = random.choice(list(people_copy.keys()))
+        if x == i:
+            continue
+        matches[i] = x
+        del people_copy[x]
+        i += 1
+    bootstrap(people, matches, args.email, args.smtp)
+    sys.exit()
