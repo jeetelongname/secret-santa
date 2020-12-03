@@ -54,7 +54,7 @@ def main():
         sys.exit(2)
 
     del people[-1]  # delete the label row
-    # it works because its a dictionary =
+    # it works because its a dictionary and `-1' is the key
     # removing the trailing newlines that are made when spliting
     for i in people:
         people.get(i)[-1] = people.get(i)[-1].replace("\n", "")
