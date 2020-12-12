@@ -74,10 +74,8 @@ def bootstrap(people, matches, address, smtp):
 # email construction and sending (the out house)
     try:
         confirm = input(
-            """
-    you sure you want to send all of these emails?
-    they will fire like a machine gun after this
-    (y/n):\n
+            """ you sure you want to send all of these emails?
+            they will fire like a machine gun after this (y/n):\n
             """)
     except KeyboardInterrupt:  # I like handling this error as its a blank canvas
         print("\nyou killed me.. You could have just said no...")
@@ -97,7 +95,7 @@ def bootstrap(people, matches, address, smtp):
                             email_location))  # in the arrays
             # sent check (for sanity)
             print("sent to",
-                  people.get(i)[0], "one down!", len(matches) - i, "to go!")
+                  people.get(i)[0], i, "down!", len(matches) - i, "to go!")
     else:
         print("too bad, we could have made something great here\n")
 

@@ -71,4 +71,5 @@ def main():
         del people_copy[x]
         i += 1
     bootstrap(people, matches, args.email, args.smtp)
+    print("all done! Till next year")
     sys.exit()
