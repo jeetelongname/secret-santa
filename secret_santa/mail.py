@@ -48,8 +48,10 @@ def bootstrap(people, matches, address, smtp):
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp, context=context) as server:
         w = 0  # to do a time out
-        # a lot can go wrong at login time thus this bigass (relative) try - except
-        while True:  # we loop until we get somthing either a break or an exit :)
+        # a lot can go wrong at login time thus this bigass (relative)
+        # try - except
+        while True:
+            # we loop until we get somthing either a break or an exit :)
             try:
                 # get pass actually includes a sudo like delay
                 server.login(address, getpass(
@@ -59,10 +61,11 @@ def bootstrap(people, matches, address, smtp):
                 print("\nyou little bastard... you have killed me")
                 sys.exit(69)  # this is a srmount error (do I care? no)
             except smtplib.SMTPAuthenticationError:
-                # FIXME there is no way to gracfully ask for the email again *yet*
+                # FIXME there is no way to ask for the email again *yet*
                 print("\nyou failed")
                 continue
-            except smtplib.SMTPServerDisconnected:  # we try 5 times and they give up
+            except smtplib.SMTPServerDisconnected:
+                # try 5 times and they give up
                 w += 1
                 if w == 5:
                     print("aigt Im out")
@@ -85,7 +88,7 @@ def bootstrap(people, matches, address, smtp):
                 """ you sure you want to send all of these emails?
                 they will fire like a machine gun after this (y/n):\n
                 """)
-        except KeyboardInterrupt:  # I like handling this error as its a blank canvas
+        except KeyboardInterrupt:
             print("\nyou killed me.. You could have just said no...")
             sys.exit(420)
 
